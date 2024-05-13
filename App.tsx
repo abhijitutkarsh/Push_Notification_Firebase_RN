@@ -5,8 +5,10 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type {PropsWithChildren} from 'react';
+import messaging from '@react-native-firebase/messaging';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -58,6 +60,29 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const [fcmToken, setFcmToken] = useState<any>(null)
+
+  useEffect(()=>{
+    console.log("this is my fcm", fcmToken)
+  },[fcmToken])
+
+  const checkFcm = async() => {
+   try
+    { const fcm = await messaging().getToken()
+      setFcmToken(fcm)
+    }
+
+    catch(error)
+    {
+      console.error(error)
+    }
+
+
+  }
+
+  useEffect(()=>{
+    checkFcm()
+  },[])
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
